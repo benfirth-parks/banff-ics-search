@@ -11,6 +11,7 @@ import { SubjectPage } from './pages/SubjectPage';
 import { ReferencePage } from './pages/ReferencePage';
 import { FieldPage } from './pages/FieldPage';
 import { PrintIap } from './pages/PrintIap';
+import { AvControlPage } from './modules/avcontrol/AvControlPage';
 const SearchMapTab = lazy(() => import('./searchmap/SearchMapTab').then((m) => ({ default: m.SearchMapTab })));
 
 export function App() {
@@ -27,6 +28,7 @@ export function App() {
           <Route path="periods" element={<OpsPage />} />
           <Route path="teams" element={<TeamsPage />} />
           <Route path="map" element={<Suspense fallback={<p>Loading map…</p>}><SearchMapTab /></Suspense>} />
+          <Route path="avcontrol" element={<AvControlPage />} />
           <Route path="clues" element={<CluesPage />} />
           <Route path="subject" element={<SubjectPage />} />
           <Route path="reference" element={<ReferencePage />} />

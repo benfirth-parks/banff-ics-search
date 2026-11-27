@@ -4,6 +4,7 @@ import type {
   ResourceRow, SearchMapRec, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
 } from './types';
 import type { Hospital } from './types';
+import type { AvControlRec } from '../modules/avcontrol/model';
 
 export interface Meta { key: string; value: string }
 
@@ -19,6 +20,7 @@ class IcsDb extends Dexie {
   handovers!: Table<Handover, string>;
   resources!: Table<ResourceRow, string>;
   searchMaps!: Table<SearchMapRec, string>;
+  avControl!: Table<AvControlRec, string>;
   pickLists!: Table<PickList, string>;
   staff!: Table<StaffMember, string>;
   channels!: Table<RadioChannel, string>;
@@ -48,6 +50,8 @@ class IcsDb extends Dexie {
       meta: 'key',
     });
     this.version(2).stores({ searchMaps: synced + ', opPeriodId' });
+    // Avalanche control module (one record per op period).
+    this.version(3).stores({ avControl: synced + ', opPeriodId' });
   }
 }
 

@@ -1,6 +1,6 @@
 // Incident, operational period and handover logic.
 import { db, uid, nowIso, save, patch, live } from '../db/db';
-import type { Incident, OpPeriod, Team, Assignment, Handover, PositionLog, OrgSlot, CommsRow, Subject } from '../db/types';
+import type { IncidentType, Incident, OpPeriod, Team, Assignment, Handover, PositionLog, OrgSlot, CommsRow, Subject } from '../db/types';
 import { positionTitle, isCustom } from '../data/positions';
 
 export function makeCode() {
@@ -21,7 +21,7 @@ export function emptyOpPeriod(incidentId: string, number: number, start: string)
   };
 }
 
-export async function createIncident(input: { name: string; number: string; location: string; icName: string; exercise?: boolean }) {
+export async function createIncident(input: { name: string; number: string; location: string; icName: string; exercise?: boolean; type?: IncidentType }) {
   const id = uid();
   const start = nowIso();
   const op = emptyOpPeriod(id, 1, start);
@@ -34,7 +34,7 @@ export async function createIncident(input: { name: string; number: string; loca
   op.hospitals = (await db.hospitals.toArray()).map(({ id: _id, ...h }) => h);
   if (input.icName) op.org.ic = { name: input.icName, since: start };
   const incident: Incident = {
-    id, incidentId: id, updatedAt: start, name: input.name, number: input.number, type: 'missing-person',
+    id, incidentId: id, updatedAt: start, name: input.name, number: input.number, type: input.type ?? 'missing-person',
     code: makeCode(), startedAt: start, location: input.location, caltopoUrl: '', currentOpPeriodId: op.id,
     situationSummary: '', mapNotes: '', exercise: input.exercise,
   };
