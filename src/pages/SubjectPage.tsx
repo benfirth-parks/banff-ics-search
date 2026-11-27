@@ -2,7 +2,8 @@ import { useCtx } from './IncidentLayout';
 import { useTable } from '../lib/hooks';
 import { patch, save, uid, nowIso } from '../db/db';
 import type { Subject } from '../db/types';
-import { Text } from '../components/ui';
+import { Text, Select } from '../components/ui';
+import { LPB_CATEGORIES, LPB_TERRAINS } from '../searchmap/packages/behaviour/src/index.ts';
 import { compressPhoto } from '../lib/device';
 
 const FIELDS: [keyof Subject, string, boolean?][] = [

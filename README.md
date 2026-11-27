@@ -37,6 +37,22 @@ handovers and transfer of command, plus simple field tools for team phones.
   access check (Canada only + portal Parks password). The master copy is in
   app-portal; update it there and copy it here.
 
+## Search map
+The **Search map** tab is the Lost Person search map builder (from
+benfirth-parks/lost-person-probability, copied into `src/searchmap/`), built into
+each incident:
+- Fed from the forms: planning point (IPP/LKP/PLS), direction of travel, subject
+  category and terrain live on the Subject profile and drive the map.
+- One map per operational period; rollover copies it forward.
+- Range rings and dispersion from the Lost Person Behavior table, ring-sector
+  and trail segments, planned POD, and a CalTopo import file per period.
+- "Create 204s" turns segments into ICS 204 assignments (segment = segment name).
+- Debriefs take an achieved POD estimate; the map shows cumulative POD per
+  segment across periods (1 - product of (1 - POD)).
+- Ridge-and-creek segments and terrain shading need the terrain tiles that are
+  deployed only with the Lost Person site, so ring sectors are the default here.
+- Training use only, as in the source project. Sweep widths are exercise values.
+
 ## Sign-in
 No accounts. Each incident gets a shared code (e.g. `ELK-4821`) shown in the
 top bar. Others join with that code as Command post or Field team.

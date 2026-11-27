@@ -2,6 +2,7 @@
 // The exercise controller's script (injects and timings) is in docs/tabletop-scenario.md.
 import { db, save, patch, uid, nowIso, live } from '../db/db';
 import { createIncident, setPosition } from '../lib/ops';
+import { DEFAULT_SETTINGS } from '../searchmap/defaults';
 import type { Incident, OpPeriod, Subject, Team, Assignment } from '../db/types';
 
 export async function loadExercise(): Promise<Incident> {
@@ -74,6 +75,9 @@ export async function loadExercise(): Promise<Incident> {
     equipment: 'Small daypack, 1 L water, phone (low battery), no headlamp, no overnight gear', medical: 'None known. Mild asthma (inhaler).',
     experience: 'Regular day hiker, new to the Rockies (moved from Toronto 6 months ago).', plan: 'Cory Pass / Edith Pass loop, clockwise, planned to be back by 17:00.',
     lastSeenTime: 'Last text 14:12 today', lastSeenLocation: 'Cory Pass (LKP)', vehicle: 'Blue hatchback, plate EXR-001 (fictional)', contactName: 'Partner "Sam" (fictional), 403-555-0999',
+    planningCoord: '51.2155, -115.6640', planningPointKind: 'LKP', travelBearing: '320', category: 'hiker', terrain: 'temperate mountainous',
   });
+  // Search map for op period 1, built from the subject's planning inputs.
+  await save('searchMaps', { id: uid(), incidentId: inc.id, opPeriodId: op.id, updatedAt: nowIso(), settings: DEFAULT_SETTINGS, pod: undefined });
   return (await db.incidents.get(inc.id))!;
 }

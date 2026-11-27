@@ -37,6 +37,7 @@ export function IncidentLayout() {
         <NavLink to="forms">ICS forms</NavLink>
         <NavLink to="periods">Op periods &amp; handovers</NavLink>
         <NavLink to="teams">Teams &amp; assignments</NavLink>
+        <NavLink to="map">Search map</NavLink>
         <NavLink to="clues">Clue log</NavLink>
         <NavLink to="subject">Subject</NavLink>
         <NavLink to="reference">Reference</NavLink>

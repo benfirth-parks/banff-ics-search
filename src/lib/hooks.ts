@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useEffect, useState } from 'react';
 import { db, live, patch } from '../db/db';
 import type { Table } from 'dexie';
-import type { OpPeriod, Incident, Team, Assignment, CheckIn, Clue, Handover, PositionLog, ResourceRow, Subject } from '../db/types';
+import type { OpPeriod, Incident, Team, Assignment, CheckIn, Clue, Handover, PositionLog, ResourceRow, Subject, SearchMapRec } from '../db/types';
 import { subscribeSync, type SyncState } from './sync';
 import { fmt } from '../components/ui';
 
@@ -24,7 +24,7 @@ export function useOp(incident: Incident | undefined, selectedId?: string) {
 
 interface RowTypes {
   teams: Team; assignments: Assignment; checkIns: CheckIn; clues: Clue; handovers: Handover;
-  positionLog: PositionLog; resources: ResourceRow; subjects: Subject;
+  positionLog: PositionLog; resources: ResourceRow; subjects: Subject; searchMaps: SearchMapRec;
 }
 
 export function useTable<K extends keyof RowTypes>(table: K, incidentId: string | undefined, opPeriodId?: string): RowTypes[K][] {
