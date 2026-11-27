@@ -126,6 +126,8 @@ export interface Debrief {
   notSearched: string;
   suggestions: string;
   by: string;
+  /** Team's estimate of achieved POD for a responsive subject, 0-100. */
+  podAchieved?: string;
 }
 
 export interface CheckIn extends BaseRecord {
@@ -172,6 +174,32 @@ export interface Subject extends BaseRecord {
   contactName: string;
   photo?: string;
   notes: string;
+  // Search planning inputs (feed the Search map)
+  planningCoord?: string; // as typed: decimal degrees, DMS or UTM
+  planningPointKind?: 'IPP' | 'LKP' | 'PLS';
+  travelBearing?: string; // degrees true, blank if unknown
+  category?: string; // Lost Person Behavior category
+  terrain?: string;
+}
+
+/** Search map settings for one operational period (rings, segments, planned POD). */
+export interface SearchMapRec extends BaseRecord {
+  opPeriodId: string;
+  settings: {
+    manual: boolean;
+    rings: { percent: string; value: string }[];
+    ringSource: string;
+    dispersion: { percent: string; value: string }[];
+    dispersionSource: string;
+    sectors: string;
+    segRings: string[];
+    trailWidth: string;
+    trailPiece: string;
+    trailRings: string[];
+  };
+  trails?: { name: string; lines: { lng: number; lat: number }[][]; skipped: number };
+  pod: unknown; // PodState from the search map UI
+  table?: unknown; // custom behaviour table, if one was loaded
 }
 
 /** One stint of a person in a position. Open stints have no `end`. */
@@ -208,11 +236,11 @@ export interface ResourceRow extends BaseRecord {
 
 export type TableName =
   | 'incidents' | 'opPeriods' | 'teams' | 'assignments' | 'checkIns' | 'clues'
-  | 'subjects' | 'positionLog' | 'handovers' | 'resources';
+  | 'subjects' | 'positionLog' | 'handovers' | 'resources' | 'searchMaps';
 
 export const SYNC_TABLES: TableName[] = [
   'incidents', 'opPeriods', 'teams', 'assignments', 'checkIns', 'clues',
-  'subjects', 'positionLog', 'handovers', 'resources',
+  'subjects', 'positionLog', 'handovers', 'resources', 'searchMaps',
 ];
 
 // Local-only reference data (editable on each device; seeded with samples).

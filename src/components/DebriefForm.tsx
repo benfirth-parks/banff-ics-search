@@ -24,6 +24,8 @@ export function DebriefForm({ a, team, by, onDone }: { a: Assignment; team?: Tea
       {FIELDS.map(([k, label]) => (
         <label key={k} className="field"><span>{label}</span><textarea rows={2} value={d[k]} onChange={(e) => setD({ ...d, [k]: e.target.value })} /></label>
       ))}
+      <label className="field"><span>Estimated POD for a responsive subject in this segment (%)</span>
+        <input inputMode="numeric" value={d.podAchieved ?? ''} placeholder="e.g. 60" onChange={(e) => setD({ ...d, podAchieved: e.target.value })} /></label>
       <label className="field"><span>Debriefed by</span><input value={d.by} onChange={(e) => setD({ ...d, by: e.target.value })} /></label>
       <button className="primary" onClick={submit}>Save debrief and mark assignment complete</button>
     </div>

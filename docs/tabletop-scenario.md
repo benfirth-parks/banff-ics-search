@@ -28,7 +28,8 @@ Times are exercise time (start = T+0, roughly 22:45 on the scenario day).
 | T+45 | Snow starts; Safety Officer concerned | Safety | Update ICS 208; add safety message to 204s |
 | T+50 | Plans Chief's shift ends; relief arrives | Plans | Op periods page: record handover with open tasks |
 | T+60 | IC handover to incoming IC for the day shift | IC | Transfer of command with 201 briefing |
-| T+65 | Prepare op period 2 (07:00-19:00) | Plans | Roll over; edit objectives (first-light heli recon); assign teams; Print IAP |
+| T+40 | Plans builds the search map | Plans | Search map tab: check rings from the subject profile, Create 204s for segments, Download CalTopo file |
+| T+65 | Prepare op period 2 (07:00-19:00) | Plans | Roll over (search map carries forward with cumulative POD from debriefs); edit objectives (first-light heli recon); assign teams; Print IAP |
 | T+80 | Heli recon spots person waving in Gargoyle Valley | Ops | Clue/check-in; medical plan (206) used for evac |
 | T+90 | Subject found, cold but OK | All | Debrief each assignment; close out |
 

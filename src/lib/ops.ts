@@ -110,6 +110,10 @@ export async function rolloverOpPeriod(incident: Incident, from: OpPeriod, start
     teamMap.set(t.id, nt.id);
     await save('teams', nt);
   }
+  // Search map: same rings, segments and planned POD; searched-so-far is worked out from debriefs.
+  const sm = live(await db.searchMaps.where('opPeriodId').equals(from.id).toArray())[0];
+  if (sm) await save('searchMaps', { ...structuredClone(sm), id: uid(), opPeriodId: next.id });
+
   const asg = live(await db.assignments.where('opPeriodId').equals(from.id).toArray()).filter((a) => a.status !== 'complete');
   for (const a of asg) {
     const na: Assignment = {

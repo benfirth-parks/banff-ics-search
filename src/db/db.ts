@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type {
   Incident, OpPeriod, Team, Assignment, CheckIn, Clue, Subject, PositionLog, Handover,
-  ResourceRow, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
+  ResourceRow, SearchMapRec, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
 } from './types';
 import type { Hospital } from './types';
 
@@ -18,6 +18,7 @@ class IcsDb extends Dexie {
   positionLog!: Table<PositionLog, string>;
   handovers!: Table<Handover, string>;
   resources!: Table<ResourceRow, string>;
+  searchMaps!: Table<SearchMapRec, string>;
   pickLists!: Table<PickList, string>;
   staff!: Table<StaffMember, string>;
   channels!: Table<RadioChannel, string>;
@@ -46,6 +47,7 @@ class IcsDb extends Dexie {
       aircraft: 'id',
       meta: 'key',
     });
+    this.version(2).stores({ searchMaps: synced + ', opPeriodId' });
   }
 }
 
