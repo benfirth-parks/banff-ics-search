@@ -143,3 +143,4 @@ ol.strings li { margin-bottom: 4px; } ol.strings li > span { display: inline-blo
 
 /* Room for the shared feedback button (bottom-left) */
 .field-app { padding-bottom: 60px; }
+.name-cell input { min-width: 9em; }

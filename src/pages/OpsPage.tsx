@@ -5,7 +5,7 @@ import { useOpPeriods, useTable } from '../lib/hooks';
 import { rolloverOpPeriod, recordHandover, type Snapshot201 } from '../lib/ops';
 import { patch } from '../db/db';
 import type { Handover } from '../db/types';
-import { POSITIONS, positionTitle } from '../data/positions';
+import { orgPositions, positionTitle } from '../data/positions';
 import { StaffDatalist } from '../forms/Ics203';
 import { fmt, toLocalInput, fromLocalInput } from '../components/ui';
 
@@ -14,6 +14,8 @@ export function OpsPage() {
   const periods = useOpPeriods(incident.id);
   const handovers = useTable('handovers', incident.id).sort((a, b) => b.time.localeCompare(a.time));
   const history = useTable('positionLog', incident.id).sort((a, b) => a.start.localeCompare(b.start));
+  const order = orgPositions(op.org).map((p) => p.key);
+  const orderOf = (k: string) => (order.includes(k) ? order.indexOf(k) : order.length);
   const [start, setStart] = useState(op.end);
   const [len, setLen] = useState(12);
   const [busy, setBusy] = useState(false);
@@ -61,8 +63,8 @@ export function OpsPage() {
       <section className="card">
         <h2>Position history</h2>
         <table className="grid compact"><thead><tr><th>Position</th><th>Name</th><th>From</th><th>To</th><th>How</th></tr></thead>
-          <tbody>{POSITIONS.flatMap((p) => history.filter((x) => x.positionKey === p.key).map((x) => (
-            <tr key={x.id}><td>{p.title}</td><td>{x.name}</td><td>{fmt(x.start)}</td><td>{x.end ? fmt(x.end) : 'now'}</td><td>{x.reason}</td></tr>
+          <tbody>{[...new Set(history.map((x) => x.positionKey))].sort((a, b) => orderOf(a) - orderOf(b)).flatMap((k) => history.filter((x) => x.positionKey === k).map((x) => (
+            <tr key={x.id}><td>{positionTitle(k, op.org)}</td><td>{x.name}</td><td>{fmt(x.start)}</td><td>{x.end ? fmt(x.end) : 'now'}</td><td>{x.reason}</td></tr>
           )))}</tbody>
         </table>
       </section>
@@ -86,7 +88,7 @@ function HandoverForm() {
       positionKey: key, outgoing, incoming, summary, isCommandTransfer: isIc,
       openTasks: tasks.filter((t) => t.trim()).map((text) => ({ text, done: false })),
     });
-    setDone(`${positionTitle(key)} handed over to ${incoming}.`);
+    setDone(`${positionTitle(key, op.org)} handed over to ${incoming}.`);
     setKey(''); setIncoming(''); setSummary(''); setTasks(['']);
   };
 
@@ -98,7 +100,7 @@ function HandoverForm() {
         <label className="field"><span>Position</span>
           <select value={key} onChange={(e) => setKey(e.target.value)}>
             <option value="">Choose…</option>
-            {POSITIONS.map((p) => <option key={p.key} value={p.key}>{p.title}{op.org[p.key]?.name ? ` (${op.org[p.key].name})` : ''}</option>)}
+            {orgPositions(op.org).map((p) => <option key={p.key} value={p.key}>{p.title}{op.org[p.key]?.name ? ` (${op.org[p.key].name})` : ''}</option>)}
           </select>
         </label>
         <label className="field"><span>Outgoing</span><input value={outgoing} readOnly /></label>
@@ -124,12 +126,13 @@ function HandoverForm() {
 }
 
 function HandoverCard({ h }: { h: Handover }) {
+  const { org } = useCtx().op;
   const [show201, setShow201] = useState(false);
   const snap = h.briefingSnapshot ? (JSON.parse(h.briefingSnapshot) as Snapshot201) : null;
   const toggle = (i: number) => patch<Handover>('handovers', h.id, { openTasks: h.openTasks.map((t, j) => (j === i ? { ...t, done: !t.done } : t)) });
   return (
     <div className="handover">
-      <div className="row"><b>{h.isCommandTransfer ? 'TRANSFER OF COMMAND' : positionTitle(h.positionKey)}</b>
+      <div className="row"><b>{h.isCommandTransfer ? 'TRANSFER OF COMMAND' : positionTitle(h.positionKey, org)}</b>
         <span>{h.outgoing || '(vacant)'} → {h.incoming}</span><span className="muted">{fmt(h.time)}</span></div>
       {h.summary && <p className="pre">{h.summary}</p>}
       {h.openTasks.length > 0 && (
@@ -145,7 +148,7 @@ function HandoverCard({ h }: { h: Handover }) {
               <p><b>Situation:</b> <span className="pre">{snap.incident.situationSummary || '—'}</span></p>
               <p><b>Objectives:</b></p><ol>{snap.op.objectives.map((o, i) => <li key={i}>{o}</li>)}</ol>
               <p><b>Actions:</b></p><ul>{snap.op.actions.map((a, i) => <li key={i}>{a.time} {a.action}</li>)}</ul>
-              <p><b>Organization:</b> {Object.entries(snap.op.org).map(([k, v]) => `${positionTitle(k)}: ${v.name}`).join(' · ')}</p>
+              <p><b>Organization:</b> {Object.entries(snap.op.org).map(([k, v]) => `${positionTitle(k, snap.op.org)}: ${v.name}`).join(' · ')}</p>
               <p><b>Teams:</b> {snap.teams.map((t) => `${t.name} (${t.status})`).join(', ') || '—'}</p>
               <p><b>Resources:</b> {snap.resources.map((r) => `${r.resource} ${r.identifier}`).join(', ') || '—'}</p>
             </div>

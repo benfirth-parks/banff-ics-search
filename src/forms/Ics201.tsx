@@ -1,7 +1,7 @@
 import { FormFrame, Box, Text, RowTable, StringList, fmt } from '../components/ui';
 import { patch, save, uid, nowIso, softDelete } from '../db/db';
 import type { Incident, ResourceRow } from '../db/types';
-import { POSITIONS } from '../data/positions';
+import { orgPositions } from '../data/positions';
 import { useTable, usePickList, opLabel } from '../lib/hooks';
 import type { FormProps } from './common';
 
@@ -9,7 +9,7 @@ export function Ics201({ incident, op, update }: FormProps) {
   const resources = useTable('resources', incident.id);
   const objectivePicks = usePickList('objectives');
   const upInc = (c: Partial<Incident>) => patch<Incident>('incidents', incident.id, c);
-  const filled = POSITIONS.filter((p) => op.org[p.key]?.name);
+  const filled = orgPositions(op.org).filter((p) => op.org[p.key]?.name);
   return (
     <FormFrame num="201" title="Incident Briefing" incidentName={incident.name} opLabel={opLabel(op)}
       footer={<Text label="Prepared by (name / position)" value={op.preparedBy} onCommit={(v) => update({ preparedBy: v })} />}>

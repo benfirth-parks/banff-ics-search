@@ -43,7 +43,7 @@ export function Overview() {
           <h3>Recent check-ins</h3>
           <ul className="feed">{checkIns.map((c) => <li key={c.id}><b>{fmtTime(c.time)}</b> {teams.find((t) => t.id === c.teamId)?.name ?? 'Team'}: {c.status}{c.message && ` · ${c.message}`}</li>)}</ul>
           <h3>Recent handovers</h3>
-          <ul className="feed">{handovers.map((h) => <li key={h.id}><b>{fmtTime(h.time)}</b> {positionTitle(h.positionKey)}: {h.outgoing} → {h.incoming}</li>)}</ul>
+          <ul className="feed">{handovers.map((h) => <li key={h.id}><b>{fmtTime(h.time)}</b> {positionTitle(h.positionKey, op.org)}: {h.outgoing} → {h.incoming}</li>)}</ul>
         </section>
       </div>
     </div>
