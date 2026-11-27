@@ -9,6 +9,11 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Static copy so Netlify Forms detects the feedback form at deploy time. -->
+    <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input name="bot-field" /><input name="kind" /><textarea name="message"></textarea><input name="name" />
+      <input name="screen" /><input name="time" /><input name="device" />
+    </form>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

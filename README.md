@@ -28,6 +28,12 @@ handovers and transfer of command, plus simple field tools for team phones.
 - **Tabletop exercise**: "Load tabletop exercise" on the home screen, with the
   controller script in [docs/tabletop-scenario.md](docs/tabletop-scenario.md).
 
+## Feedback
+A **💬 Feedback** button sits bottom-left on every screen. Entries (problem / idea /
+question, message, optional name, screen and device) go to Netlify Forms: see
+the Netlify project → Forms → `feedback`, where you can also turn on email
+notifications. Offline entries are queued and sent when the device reconnects.
+
 ## Sign-in
 No accounts. Each incident gets a shared code (e.g. `ELK-4821`) shown in the
 top bar. Others join with that code as Command post or Field team.
