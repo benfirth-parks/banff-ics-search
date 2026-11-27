@@ -10,6 +10,7 @@ import { SyncBadge } from '../components/SyncBadge';
 import { syncEnabled } from '../lib/sync';
 import { ClueForm } from '../components/ClueForm';
 import { DebriefForm } from '../components/DebriefForm';
+import { AvyFieldPanel } from '../avalanche/AvyFieldPanel';
 
 const read = (k: string) => { try { return localStorage.getItem(k) ?? ''; } catch { return ''; } };
 const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
@@ -79,6 +80,7 @@ export function FieldPage() {
               ) : <p className="muted">No assignment yet. Stand by at staging.</p>}
               {op.safetyMessage && <details><summary>Safety message</summary><p className="pre">{op.safetyMessage}</p></details>}
             </section>
+            {incident.type === 'avalanche' && <AvyFieldPanel incidentId={incident.id} teamId={team.id} teamName={team.name} me={me} />}
             <section className="card">
               <h3>Check in</h3>
               <input placeholder="Optional message" value={note} onChange={(e) => setNote(e.target.value)} />

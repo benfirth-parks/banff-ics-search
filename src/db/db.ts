@@ -4,6 +4,7 @@ import type {
   ResourceRow, SearchMapRec, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
 } from './types';
 import type { Hospital } from './types';
+import type { AvySite, AvyParty, AvyArea } from '../avalanche/types';
 
 export interface Meta { key: string; value: string }
 
@@ -25,6 +26,9 @@ class IcsDb extends Dexie {
   hospitals!: Table<Hospital & { id: string }, string>;
   aircraft!: Table<AircraftCompany, string>;
   meta!: Table<Meta, string>;
+  avySites!: Table<AvySite, string>;
+  avyParties!: Table<AvyParty, string>;
+  avyAreas!: Table<AvyArea, string>;
 
   constructor() {
     super('banff-ics-search');
@@ -48,6 +52,8 @@ class IcsDb extends Dexie {
       meta: 'key',
     });
     this.version(2).stores({ searchMaps: synced + ', opPeriodId' });
+    // Large avalanche module
+    this.version(3).stores({ avySites: synced, avyParties: synced, avyAreas: synced });
   }
 }
 

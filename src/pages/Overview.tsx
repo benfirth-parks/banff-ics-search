@@ -3,6 +3,7 @@ import { useCtx } from './IncidentLayout';
 import { useTable } from '../lib/hooks';
 import { fmt, fmtTime } from '../components/ui';
 import { positionTitle } from '../data/positions';
+import { AvyOverviewCard } from '../avalanche/AvyOverviewCard';
 
 export function Overview() {
   const { incident, op } = useCtx();
@@ -24,9 +25,11 @@ export function Overview() {
       </div>
       <div className="cols2">
         <section className="card">
+          {incident.type === 'avalanche' ? <AvyOverviewCard incidentId={incident.id} /> : <>
           <h3>Subject</h3>
           {subject?.name ? <p><b>{subject.name}</b>, {subject.age} · Last seen {subject.lastSeenTime} at {subject.lastSeenLocation}</p> : <p className="muted">No subject profile yet.</p>}
           <Link to="subject">Open subject profile</Link>
+          </>}
           <h3>Objectives</h3>
           {op.objectives.length ? <ol>{op.objectives.map((o, i) => <li key={i}>{o}</li>)}</ol> : <p className="muted">None yet. <Link to="forms/202">Add on ICS 202</Link></p>}
           <h3>Map</h3>
