@@ -10,12 +10,10 @@ import { SubjectPage } from './pages/SubjectPage';
 import { ReferencePage } from './pages/ReferencePage';
 import { FieldPage } from './pages/FieldPage';
 import { PrintIap } from './pages/PrintIap';
-import { FeedbackButton } from './components/Feedback';
 
 export function App() {
   return (
     <HashRouter>
-      <FeedbackButton />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/reference" element={<ReferencePage />} />

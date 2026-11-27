@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1f3b2d" />
     <title>Banff ICS for Search</title>
+    <script defer src="https://banff-app-portal.netlify.app/t.js" data-app="banff-ics-search"></script>
   </head>
   <body>
     <div id="root"></div>
-    <!-- Static copy so Netlify Forms detects the feedback form at deploy time. -->
-    <form name="feedback" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <input name="bot-field" /><input name="kind" /><textarea name="message"></textarea><input name="name" />
-      <input name="screen" /><input name="time" /><input name="device" />
-    </form>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- App feedback box (shared with Ben's other apps, master copy in app-portal): suggestions go to the site's Netlify form "app-feedback" -->
+    <form name="app-feedback" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="app"><input name="subject"><textarea name="suggestion"></textarea><input name="name"><input name="page"><input name="bot-field"></form>
+    <script src="/app-feedback.js" data-app="ICS for Search" defer></script>
   </body>
 </html>

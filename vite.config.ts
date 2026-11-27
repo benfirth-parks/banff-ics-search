@@ -18,7 +18,7 @@ export default defineConfig({
         start_url: '/',
         icons: [{ src: 'icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
       },
-      workbox: { globPatterns: ['**/*.{js,css,html,svg}'], navigateFallback: '/index.html' },
+      workbox: { globPatterns: ['**/*.{js,css,html,svg}'], navigateFallback: '/index.html', navigateFallbackDenylist: [/^\/__parks-pass/] },
     }),
   ],
 });
