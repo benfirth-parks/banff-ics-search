@@ -51,7 +51,7 @@ export function TeamsPage() {
       <section className="card">
         <div className="row"><h2>Assignments</h2>
           <button onClick={() => save('assignments', newAssignment(incident.id, op.id, asg.length + 1))}>+ Assignment</button>
-          <Link to="../forms/204" relative="path">Edit full ICS 204s</Link></div>
+          <Link to={`/i/${incident.id}/forms/204`}>Edit full ICS 204s</Link></div>
         <table className="grid compact"><thead><tr><th>#</th><th>Segment</th><th>Team</th><th>Status</th><th>Debrief</th></tr></thead>
           <tbody>{asg.sort((a, b) => a.number.localeCompare(b.number, undefined, { numeric: true })).map((a) => {
             const team = teams.find((t) => t.id === a.teamId);

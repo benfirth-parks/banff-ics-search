@@ -17,7 +17,7 @@ export function FormsPage() {
     <div>
       <div className="row no-print toolbar">
         <div className="subtabs">{FORMS.map((f) => (
-          <button key={f.num} className={f.num === F.num ? 'on' : ''} onClick={() => nav(`../forms/${f.num}`, { relative: 'path' })} title={f.title}>ICS {f.num}</button>
+          <button key={f.num} className={f.num === F.num ? 'on' : ''} onClick={() => nav(`/i/${incident.id}/forms/${f.num}`)} title={f.title}>ICS {f.num}</button>
         ))}</div>
         <select value={opId} onChange={(e) => setOpId(e.target.value)}>
           {periods.map((p) => <option key={p.id} value={p.id}>Op period {p.number}{p.id === currentOp.id ? ' (current)' : ` (${p.status})`}</option>)}
