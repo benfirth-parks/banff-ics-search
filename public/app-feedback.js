@@ -7,10 +7,11 @@
   var me = document.currentScript;
   var APP = (me && me.getAttribute("data-app")) || document.title || "App";
   var css = [
-    ".afb-btn{position:fixed;left:12px;bottom:12px;z-index:990;font:600 13px/1 system-ui,sans-serif;padding:9px 12px;border-radius:20px;border:1px solid rgba(0,0,0,.15);background:#16202b;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;min-height:40px;opacity:.82}",
+    ".afb-btn{position:fixed;right:12px;bottom:12px;z-index:990;font:600 13px/1 system-ui,sans-serif;padding:9px 12px;border-radius:20px;border:1px solid rgba(0,0,0,.15);background:#ff5a1f;color:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;min-height:40px}",
+    ".afb-btn:hover{background:#e84a12}",
     ".afb-btn:hover,.afb-btn:focus-visible,.afb-btn[aria-expanded=true]{opacity:1}",
     ".afb-btn:focus-visible,.afb-box button:focus-visible,.afb-box textarea:focus-visible,.afb-box input:focus-visible{outline:3px solid #7cc2ff;outline-offset:2px}",
-    ".afb-box{position:fixed;left:12px;bottom:64px;z-index:991;width:min(360px,calc(100vw - 32px));background:#fff;color:#16202b;border:1px solid #d9e0e7;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px;font:15px/1.45 system-ui,sans-serif}",
+    ".afb-box{position:fixed;right:12px;bottom:64px;z-index:991;width:min(360px,calc(100vw - 32px));background:#fff;color:#16202b;border:1px solid #d9e0e7;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.25);padding:16px;font:15px/1.45 system-ui,sans-serif}",
     ".afb-box h2{margin:0 0 4px;font-size:17px}",
     ".afb-box p{margin:0 0 10px;color:#5b6876;font-size:13px}",
     ".afb-box textarea,.afb-box input{display:block;width:100%;box-sizing:border-box;font:16px system-ui,sans-serif;padding:9px 10px;border:1px solid #c5ced8;border-radius:8px;margin:0 0 8px;background:#fff;color:#16202b}",
@@ -65,7 +66,7 @@
     function place() {
       var lift = 0, covered = false;
       try {
-        var hits = document.elementsFromPoint(24, window.innerHeight - 4);
+        var hits = document.elementsFromPoint(window.innerWidth - 24, window.innerHeight - 4);
         for (var i = 0; i < hits.length; i++) {
           var el = hits[i];
           if (el === btn || el === box || btn.contains(el) || box.contains(el)) continue;
