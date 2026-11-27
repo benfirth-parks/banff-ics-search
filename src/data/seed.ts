@@ -35,12 +35,11 @@ export const DEFAULT_PICKLISTS: Record<string, string[]> = {
  * Banff Visitor Safety staff (2027 VS schedule) and the avalanche callout list
  * ("Avy callout list 2026-2027", Staff & Codes tab), the same sources the winter
  * morning meeting app uses. Names and call signs only; no phone numbers.
- * Surname-only entries are as the schedule lists them.
  */
 const VS = 'Parks Canada Visitor Safety (Banff / LLYK)';
 export const STAFF: StaffMember[] = [
   ['Lisa Paulson', ''], ['Aaron Beardmore', ''], ['Steve Holeczi', ''], ['Conrad Janzen', ''], ['Ian Jackson', ''],
-  ['Alex Lawson', ''], ['Ben Firth', ''], ['Adam Greenberg', ''], ['Haggarty', ''], ['Funston', ''],
+  ['Alex Lawson', ''], ['Ben Firth', ''], ['Adam Greenberg', ''], ['Tim Haggarty', ''], ['Morgen Funston', ''],
 ].map(([name, callSign], i) => ({ id: `vs${i + 1}`, name: name!, callSign: callSign!, agency: VS, quals: ['Visitor Safety'], phone: '' }))
   .concat([
     ['Mike Grande', 'B23', 'East'], ['Dan Rafla', '', 'East'], ['Spencer Bieri', '', 'East'], ['Ryan Burlingame', 'F2', 'East'],
