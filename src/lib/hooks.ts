@@ -34,7 +34,7 @@ export function useTable<K extends keyof RowTypes>(table: K, incidentId: string 
     return opPeriodId ? all.filter((r) => r.opPeriodId === opPeriodId) : all;
   }, [table, incidentId, opPeriodId]);
   const out = live(rows);
-  if (table === 'teams') (out as Team[]).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  if (table === 'teams') (out as unknown as Team[]).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
   return out;
 }
 
