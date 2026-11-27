@@ -5,6 +5,11 @@ import { createIncident, setPosition } from '../lib/ops';
 import { DEFAULT_SETTINGS } from '../searchmap/defaults';
 import type { Incident, OpPeriod, Subject, Team, Assignment } from '../db/types';
 
+/** Search planning inputs for the tabletop subject (also used to fill older exercises). */
+export const EXERCISE_PLANNING = {
+  planningCoord: '51.2155, -115.6640', planningPointKind: 'LKP' as const, travelBearing: '320', category: 'hiker', terrain: 'temperate mountainous',
+};
+
 export async function loadExercise(): Promise<Incident> {
   const inc = await createIncident({
     name: 'EXERCISE Overdue hiker, Cory Pass', number: 'EX-2026-001', location: 'Cory Pass / Edith Pass loop, Banff NP', icName: 'Avery Lindqvist', exercise: true,
@@ -75,7 +80,7 @@ export async function loadExercise(): Promise<Incident> {
     equipment: 'Small daypack, 1 L water, phone (low battery), no headlamp, no overnight gear', medical: 'None known. Mild asthma (inhaler).',
     experience: 'Regular day hiker, new to the Rockies (moved from Toronto 6 months ago).', plan: 'Cory Pass / Edith Pass loop, clockwise, planned to be back by 17:00.',
     lastSeenTime: 'Last text 14:12 today', lastSeenLocation: 'Cory Pass (LKP)', vehicle: 'Blue hatchback, plate EXR-001 (fictional)', contactName: 'Partner "Sam" (fictional), 403-555-0999',
-    planningCoord: '51.2155, -115.6640', planningPointKind: 'LKP', travelBearing: '320', category: 'hiker', terrain: 'temperate mountainous',
+    ...EXERCISE_PLANNING,
   });
   // Search map for op period 1, built from the subject's planning inputs.
   await save('searchMaps', { id: uid(), incidentId: inc.id, opPeriodId: op.id, updatedAt: nowIso(), settings: DEFAULT_SETTINGS, pod: undefined });

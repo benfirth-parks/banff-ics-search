@@ -2,7 +2,7 @@
 // forms and kept per operational period. The planning point, direction of
 // travel, subject category and terrain live on the Subject profile and are
 // shared with it; ring, segment and planned-POD settings are saved per period.
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { categories, LPB_CATEGORIES, LPB_TABLE, lookupBehaviour, PERCENTILES, terrains, type BehaviourTable } from './packages/behaviour/src/index.ts';
 import {
@@ -20,6 +20,8 @@ import type { Assignment, SearchMapRec, Subject } from '../db/types';
 import { newAssignment } from '../forms/Ics204';
 import './searchmap.css';
 import { DEFAULT_SETTINGS } from './defaults';
+import { planningPrefill } from './prefill';
+import { db, live } from '../db/db';
 
 type Settings = SearchMapRec['settings'];
 const PERCENTS = PERCENTILES.map(String);
@@ -38,6 +40,27 @@ export function SearchMapTab() {
   useEffect(() => setOpId(op.id), [op.id]);
   const rec = allMaps.find((m) => m.opPeriodId === opId);
   const viewOp = periods.find((p) => p.id === opId) ?? op;
+
+  // Start from the forms: fill blank planning inputs from the subject profile and
+  // incident, and create the current period's map so it is ready when opened.
+  const filled = useRef(false);
+  useEffect(() => {
+    if (!subject || filled.current) return;
+    filled.current = true;
+    const fill = planningPrefill(incident, subject);
+    if (Object.keys(fill).length) void patch<Subject>('subjects', subject.id, fill);
+  }, [subject, incident]);
+  const creating = useRef<string | null>(null);
+  useEffect(() => {
+    if (opId !== op.id || creating.current === op.id) return;
+    creating.current = op.id;
+    void (async () => {
+      const have = live(await db.searchMaps.where('opPeriodId').equals(op.id).toArray());
+      if (!have.length) await save<SearchMapRec>('searchMaps', {
+        id: uid(), incidentId: incident.id, opPeriodId: op.id, updatedAt: nowIso(), settings: DEFAULT_SETTINGS, pod: INITIAL_POD_STATE,
+      });
+    })();
+  }, [opId, op.id, incident.id]);
 
   if (!subject) return <p>Create the subject profile first.</p>;
   return (
@@ -331,6 +354,16 @@ function Builder({ rec, subject, incidentName, opNumber, assignments, periods }:
                   );
                 })}</tbody>
               </table></div>
+              {(() => {
+                const other = thisPeriodAsg.filter((x) => !segmentNames.includes(x.segment.trim()));
+                return other.length > 0 && (
+                  <>
+                    <h3>Other 204s this period</h3>
+                    <p className="cap">Assignments not tied to a map segment, such as trail hasty searches and containment.</p>
+                    <ul>{other.map((x) => <li key={x.id}><Link to={`/i/${rec.incidentId}/forms/204`}>#{x.number}</Link> {x.segment || '(no segment)'} · {x.status}</li>)}</ul>
+                  </>
+                );
+              })()}
               <p className="cap">Cumulative POD = 1 − Π(1 − POD) over every debrief that gave a POD estimate for the segment, in any op period. These are team estimates of achieved coverage, not planned values.</p>
             </div>
           </>
