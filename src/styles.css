@@ -144,3 +144,19 @@ ol.strings li { margin-bottom: 4px; } ol.strings li > span { display: inline-blo
 /* Room for the shared feedback button (bottom-left) */
 .field-app { padding-bottom: 60px; }
 .name-cell input { min-width: 9em; }
+
+/* Avalanche control module */
+.avc-status.alarm { border-color: var(--danger); background: #fdecea; }
+.avc-status.ok { border-color: var(--ok); }
+.avc-status .stats { margin-bottom: 0; }
+.avc tr.avc-live td { background: #fff8e1; }
+.avc tr.avc-done td { background: #f1f7f1; }
+.avc tr.avc-misfire td { background: #fdecea; }
+.avc td.num input { width: 4.5em; }
+.avc-targets td { min-width: 6em; }
+.avc-shot { white-space: nowrap; }
+.tag-danger { background: var(--danger); color: #fff; }
+.ok-text { color: var(--ok); }
+.avc-blockers { color: var(--danger); margin: 4px 0 8px; padding-left: 18px; }
+.avc-targets td:first-child input, .avc-targets td:nth-child(5) input { min-width: 11em; }
+.avc-targets td:nth-child(3) select { min-width: 10em; }

@@ -6,6 +6,8 @@ import { createIncident } from '../lib/ops';
 import { joinRemote, syncEnabled, syncNow } from '../lib/sync';
 import { loadExercise, SCENARIOS } from '../data/scenario';
 import { fmt } from '../components/ui';
+import type { IncidentType } from '../db/types';
+import { AVC_SCENARIO, loadAvControlExercise } from '../modules/avcontrol/scenario';
 
 export function Home() {
   const nav = useNavigate();
@@ -13,7 +15,7 @@ export function Home() {
   const [code, setCode] = useState('');
   const [role, setRole] = useState<'command' | 'field'>('command');
   const [msg, setMsg] = useState('');
-  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '' });
+  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '', type: 'missing-person' as IncidentType });
   const [scenario, setScenario] = useState('random');
   const go = (id: string) => nav(role === 'field' ? `/i/${id}/field` : `/i/${id}`);
 
@@ -51,6 +53,11 @@ export function Home() {
         </section>
         <section className="card">
           <h2>Start a new incident</h2>
+          <label className="field"><span>Incident type</span>
+            <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as IncidentType })}>
+              <option value="missing-person">Missing person search</option>
+              <option value="avalanche-control">Avalanche control</option>
+            </select></label>
           <label className="field"><span>Incident name</span><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Overdue hiker, Lake Agnes" /></label>
           <label className="field"><span>Incident number</span><input value={form.number} onChange={(e) => setForm({ ...form, number: e.target.value })} /></label>
           <label className="field"><span>Location</span><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></label>
@@ -61,10 +68,11 @@ export function Home() {
             <select value={scenario} onChange={(e) => setScenario(e.target.value)}>
               <option value="random">Random scenario</option>
               {SCENARIOS.map((s, i) => <option key={s.key} value={s.key}>{i + 1}. {s.title}</option>)}
+              <option value={AVC_SCENARIO.key}>Avalanche control: {AVC_SCENARIO.title}</option>
             </select></label>
           <button onClick={async () => {
             const key = scenario === 'random' ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.key : scenario;
-            const i = await loadExercise(key); nav(`/i/${i.id}`);
+            const i = key === AVC_SCENARIO.key ? await loadAvControlExercise() : await loadExercise(key); nav(`/i/${i.id}`);
           }}>Load tabletop exercise</button>
         </section>
       </div>

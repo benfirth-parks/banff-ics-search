@@ -5,6 +5,7 @@ import type { Table } from 'dexie';
 import type { OpPeriod, Incident, Team, Assignment, CheckIn, Clue, Handover, PositionLog, ResourceRow, Subject, SearchMapRec } from '../db/types';
 import { subscribeSync, type SyncState } from './sync';
 import { fmt } from '../components/ui';
+import type { AvControlRec } from '../modules/avcontrol/model';
 
 export function useIncident(id: string | undefined) {
   return useLiveQuery(() => (id ? db.incidents.get(id) : undefined), [id]);
@@ -25,6 +26,7 @@ export function useOp(incident: Incident | undefined, selectedId?: string) {
 interface RowTypes {
   teams: Team; assignments: Assignment; checkIns: CheckIn; clues: Clue; handovers: Handover;
   positionLog: PositionLog; resources: ResourceRow; subjects: Subject; searchMaps: SearchMapRec;
+  avControl: AvControlRec;
 }
 
 export function useTable<K extends keyof RowTypes>(table: K, incidentId: string | undefined, opPeriodId?: string): RowTypes[K][] {
