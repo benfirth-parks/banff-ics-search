@@ -21,7 +21,7 @@ export function planningPrefill(incident: Incident, s: Subject): Partial<Subject
   if (blank(s.planningCoord)) {
     const found = [s.lastSeenLocation, incident.location].find((t) => t && parseCoordinate(t).ok);
     if (found) out.planningCoord = found;
-    else if (incident.exercise) Object.assign(out, EXERCISE_PLANNING);
+    else if (incident.exercise && /Cory Pass/.test(incident.name)) Object.assign(out, EXERCISE_PLANNING);
   }
   if (!s.planningPointKind && !out.planningPointKind) {
     const m = /\b(IPP|LKP|PLS)\b/i.exec(s.lastSeenLocation);

@@ -25,7 +25,7 @@ handovers and transfer of command, plus simple field tools for team phones.
 - **Templates and pick-lists**: standard objectives, safety messages, team
   types, check-in statuses; sample staff list, radio channels, hospitals and
   helicopter companies (all fictional contacts). Editable under Reference.
-- **Tabletop exercise**: "Load tabletop exercise" on the home screen, with the
+- **Tabletop exercises**: pick one of 10 fictional scenarios (or Random) and press "Load tabletop exercise" on the home screen, with the
   controller script in [docs/tabletop-scenario.md](docs/tabletop-scenario.md).
 
 ## Portal, feedback and Parks access

@@ -27,6 +27,21 @@ type Settings = SearchMapRec['settings'];
 const PERCENTS = PERCENTILES.map(String);
 const num = (s: string) => (s.trim() === '' ? NaN : Number(s));
 
+/**
+ * CalTopo label: the place part of the incident name ("Overdue hiker, Cory Pass" -> "Cory Pass"),
+ * cut at a word, never a person's name. Falls back to the op period when it can't tell.
+ */
+function mapLabel(incidentName: string, opNumber: number): string {
+  const fallback = `Search map op ${opNumber}`;
+  const name = incidentName.replace(/^EXERCISE\s+/i, '').trim();
+  const place = (name.includes(',') ? name.slice(name.lastIndexOf(',') + 1) : name).trim();
+  let label = place;
+  if (label.length > 40) label = label.slice(0, 41).replace(/\s+\S*$/, '');
+  if (!label) return fallback;
+  const probe = validateSearchMapInput({ label, planningPoint: { lat: 0, lng: 0, kind: 'LKP' }, ringSource: 'x', rings: [{ percent: 50, distanceKm: 1 }] } as SearchMapInput);
+  return probe.some((e) => e.startsWith('label')) ? fallback : label;
+}
+
 /** Cumulative POD across periods: 1 − Π(1 − POD). */
 export const cumulativePod = (pods: number[]) => 1 - pods.reduce((acc, p) => acc * (1 - p), 1);
 
@@ -132,7 +147,7 @@ function Builder({ rec, subject, incidentName, opNumber, assignments, periods }:
     return {
       notes,
       input: {
-        label: incidentName.slice(0, 40),
+        label: mapLabel(incidentName, opNumber),
         planningPoint: { lat: coord?.ok ? coord.lat : NaN, lng: coord?.ok ? coord.lng : NaN, kind: subject.planningPointKind ?? 'LKP' },
         travelBearingDeg: bearing, subjectCategory: category || undefined, rings, ringSource, dispersion, dispersionSource,
         segments: f.sectors === '0' || f.sectors === 'ridges' ? undefined : { sectors: Number(f.sectors), inRings: f.segRings.map(num) },
@@ -355,7 +370,7 @@ function Builder({ rec, subject, incidentName, opNumber, assignments, periods }:
                 })}</tbody>
               </table></div>
               {(() => {
-                const other = thisPeriodAsg.filter((x) => !segmentNames.includes(x.segment.trim()));
+                const other = thisPeriodAsg.filter((x) => !segmentNames.includes(x.segment.trim())).sort((a, b) => Number(a.number) - Number(b.number));
                 return other.length > 0 && (
                   <>
                     <h3>Other 204s this period</h3>
