@@ -28,6 +28,15 @@ handovers and transfer of command, plus simple field tools for team phones.
 - **Tabletop exercise**: "Load tabletop exercise" on the home screen, with the
   controller script in [docs/tabletop-scenario.md](docs/tabletop-scenario.md).
 
+## Portal, feedback and Parks access
+- Listed on the app portal (banff-app-portal) under Rescue and SAR, id `banff-ics-search`.
+  `index.html` loads the portal tracker `t.js` with that id.
+- `public/app-feedback.js` is a copy of the shared feedback box (master copy in
+  the app-portal repo). Suggestions go to this site's Netlify form `app-feedback`.
+- `netlify/edge-functions/parks-access.js` is an identical copy of the Parks
+  access check (Canada only + portal Parks password). The master copy is in
+  app-portal; update it there and copy it here.
+
 ## Sign-in
 No accounts. Each incident gets a shared code (e.g. `ELK-4821`) shown in the
 top bar. Others join with that code as Command post or Field team.
