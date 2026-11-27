@@ -29,6 +29,17 @@ handovers and transfer of command, plus simple field tools for team phones.
 - **Tabletop exercises**: pick one of 10 fictional scenarios (or Random) and press "Load tabletop exercise" on the home screen, with the
   controller script in [docs/tabletop-scenario.md](docs/tabletop-scenario.md).
 
+## Avalanche control module
+
+Pick **Avalanche control** as the incident type when starting an incident. It uses the same ICS forms, op periods and handovers,
+and swaps the Search map, Clue log and Subject tabs for an **Avalanche control** tab (code in `src/modules/avcontrol/`):
+control plan and danger ratings, closures (closed, swept, reopened, also from the Field view), go / no-go checklist with a recorded GO,
+target and shot log (fired, misfire, cleared, skipped; result, size, runout, depth on road), explosives accountability, and an all clear
+that stays locked until every target is done, no misfire is outstanding, explosives balance and the road is cleared. GO, misfires and the
+all clear are written to the ICS 201 actions log. Each op period has its own record; a new period can start from the previous plan
+(closures in place, targets not shot and uncleared misfires carry over). Tabletop: "Avalanche control, Hwy 93N" with injects in
+[docs/avalanche-control-exercise.md](docs/avalanche-control-exercise.md).
+
 ## Portal, feedback and Parks access
 - Listed on the app portal (banff-app-portal) under Rescue and SAR, id `banff-ics-search`.
   `index.html` loads the portal tracker `t.js` with that id.
