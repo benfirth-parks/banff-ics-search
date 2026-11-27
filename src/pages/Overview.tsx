@@ -3,6 +3,7 @@ import { useCtx } from './IncidentLayout';
 import { useTable } from '../lib/hooks';
 import { fmt, fmtTime } from '../components/ui';
 import { positionTitle } from '../data/positions';
+import { RescueOverviewCard } from '../modules/rescue/OverviewCard';
 import { AvyOverviewCard } from '../avalanche/AvyOverviewCard';
 import { AvControlSummary } from '../modules/avcontrol/AvControlSummary';
 
@@ -24,6 +25,7 @@ export function Overview() {
         <div className="stat"><b>{count('in-field')}/{asg.length}</b><span>Assignments in field</span></div>
         {incident.type !== 'avalanche-control' && <div className="stat"><b>{clues.length}</b><span>Clues</span></div>}
       </div>
+      {incident.type === 'large-rescue' && <RescueOverviewCard />}
       <div className="cols2">
         <section className="card">
           {incident.type === 'avalanche' ? <AvyOverviewCard incidentId={incident.id} /> : incident.type === 'avalanche-control' ? <AvControlSummary incidentId={incident.id} opPeriodId={op.id} /> : <>

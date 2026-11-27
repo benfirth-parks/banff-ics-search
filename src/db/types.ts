@@ -11,7 +11,7 @@ export interface BaseRecord {
 
 /** Incident types. v1 only supports missing-person, but the field exists so
  * other types (avalanche, technical rescue, wildfire support) can be added. */
-export type IncidentType = 'missing-person' | 'avalanche-control' | 'avalanche';
+export type IncidentType = 'missing-person' | 'avalanche-control' | 'large-rescue' | 'avalanche';
 
 export interface Incident extends BaseRecord {
   name: string;
@@ -26,6 +26,8 @@ export interface Incident extends BaseRecord {
   situationSummary: string;
   mapNotes: string;
   exercise?: boolean;
+  /** Large rescue mission module (type 'large-rescue'). */
+  rescue?: import('../modules/rescue/types').RescueMission;
 }
 
 export interface OrgSlot {
@@ -92,6 +94,8 @@ export interface OpPeriod extends BaseRecord {
   // ICS 208
   safetyMessage: string;
   safetyPlan: string;
+  /** Large rescue mission module: per-period technical, aviation, medical and safety plan. */
+  rescue?: import('../modules/rescue/types').RescuePeriod;
 }
 
 export interface Team extends BaseRecord {
@@ -244,12 +248,14 @@ export type TableName =
   | 'incidents' | 'opPeriods' | 'teams' | 'assignments' | 'checkIns' | 'clues'
   | 'subjects' | 'positionLog' | 'handovers' | 'resources' | 'searchMaps'
   | 'avControl'
+  | 'patients' | 'rescueLog'
   | 'avySites' | 'avyParties' | 'avyAreas';
 
 export const SYNC_TABLES: TableName[] = [
   'incidents', 'opPeriods', 'teams', 'assignments', 'checkIns', 'clues',
   'subjects', 'positionLog', 'handovers', 'resources', 'searchMaps',
   'avControl',
+  'patients', 'rescueLog',
   'avySites', 'avyParties', 'avyAreas',
 ];
 

@@ -4,6 +4,7 @@ import type {
   ResourceRow, SearchMapRec, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
 } from './types';
 import type { Hospital } from './types';
+import type { Patient, RescueLogEntry } from '../modules/rescue/types';
 import type { AvySite, AvyParty, AvyArea } from '../avalanche/types';
 import type { AvControlRec } from '../modules/avcontrol/model';
 
@@ -28,6 +29,8 @@ class IcsDb extends Dexie {
   hospitals!: Table<Hospital & { id: string }, string>;
   aircraft!: Table<AircraftCompany, string>;
   meta!: Table<Meta, string>;
+  patients!: Table<Patient, string>;
+  rescueLog!: Table<RescueLogEntry, string>;
   avySites!: Table<AvySite, string>;
   avyParties!: Table<AvyParty, string>;
   avyAreas!: Table<AvyArea, string>;
@@ -56,6 +59,8 @@ class IcsDb extends Dexie {
     this.version(2).stores({ searchMaps: synced + ', opPeriodId' });
     // Avalanche control module (one record per op period).
     this.version(3).stores({ avControl: synced + ', opPeriodId' });
+    // Large rescue module.
+    this.version(4).stores({ patients: synced, rescueLog: synced + ', opPeriodId' });
     // Large avalanche module (version 4 is the large rescue module).
     this.version(5).stores({ avySites: synced, avyParties: synced, avyAreas: synced });
   }
