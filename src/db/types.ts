@@ -34,6 +34,10 @@ export interface OrgSlot {
   agency?: string;
   contact?: string;
   since?: string;
+  /** Added positions only (keys starting "x-"): title, 203 section and who they report to. */
+  title?: string;
+  section?: string;
+  reportsTo?: string;
 }
 
 export interface CommsRow {
@@ -100,6 +104,8 @@ export interface Team extends BaseRecord {
   contact: string;
   status: 'available' | 'assigned' | 'in-field' | 'returning' | 'out-of-service';
   lastCheckIn?: string;
+  /** Position key the strike team reports to (defaults to Ground Branch, else Operations). */
+  reportsTo?: string;
 }
 
 export interface Assignment extends BaseRecord {

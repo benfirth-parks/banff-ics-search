@@ -1,4 +1,5 @@
 // ICS 203 / 207 positions. Keys are stable ids stored in OpPeriod.org.
+import type { OrgSlot } from '../db/types';
 export interface Position { key: string; title: string; section: string; parent?: string }
 
 export const POSITIONS: Position[] = [
@@ -31,5 +32,24 @@ export const POSITIONS: Position[] = [
   { key: 'cost-unit', title: 'Cost Unit Leader', section: 'Finance/Admin', parent: 'finance' },
 ];
 
-export const positionTitle = (key: string) => POSITIONS.find((p) => p.key === key)?.title ?? key;
 export const SECTIONS = ['Command', 'Command Staff', 'Operations', 'Planning', 'Logistics', 'Finance/Admin'];
+export const SECTION_CHIEF: Record<string, string> = {
+  Command: 'ic', 'Command Staff': 'ic', Operations: 'ops', Planning: 'plans', Logistics: 'logistics', 'Finance/Admin': 'finance',
+};
+type Org = Record<string, OrgSlot>;
+export const isCustom = (key: string) => key.startsWith('x-');
+
+/** Standard positions plus people added on the 203 (keys starting "x-"). */
+export function orgPositions(org: Org = {}): Position[] {
+  const extra = Object.entries(org).filter(([k]) => isCustom(k)).map(([key, v]) => ({
+    key, title: v.title || 'Added position', section: v.section && SECTIONS.includes(v.section) ? v.section : 'Operations',
+    parent: v.reportsTo || SECTION_CHIEF[v.section ?? 'Operations'] || 'ic',
+  }));
+  return [...POSITIONS, ...extra];
+}
+
+export const positionTitle = (key: string, org?: Org) =>
+  POSITIONS.find((p) => p.key === key)?.title ?? (org?.[key]?.title || (isCustom(key) ? 'Added position' : key));
+
+/** Default position a strike team reports to. */
+export const defaultTeamLead = (org: Org) => (org['ground-branch']?.name ? 'ground-branch' : 'ops');

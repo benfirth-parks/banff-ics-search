@@ -1,7 +1,7 @@
 // Incident, operational period and handover logic.
 import { db, uid, nowIso, save, patch, live } from '../db/db';
 import type { Incident, OpPeriod, Team, Assignment, Handover, PositionLog, OrgSlot, CommsRow, Subject } from '../db/types';
-import { positionTitle } from '../data/positions';
+import { positionTitle, isCustom } from '../data/positions';
 
 export function makeCode() {
   const words = ['BOW', 'ELK', 'PIKA', 'LYNX', 'MARMOT', 'RAVEN', 'CEDAR', 'SPRUCE', 'LARCH', 'SUMMIT'];
@@ -74,7 +74,17 @@ export async function setPosition(op: OpPeriod, key: string, slot: OrgSlot | nul
   if (slot && slot.name) {
     org[key] = { ...slot, since: at };
     await logPosition(op, key, slot.name, 'assigned', at);
-  } else delete org[key];
+  } else if (isCustom(key) && current) org[key] = { ...current, ...slot, name: '', since: undefined }; // keep the added row
+  else delete org[key];
+  await patch<OpPeriod>('opPeriods', op.id, { org });
+}
+
+/** Remove a position added on the 203. */
+export async function removeCustomPosition(op: OpPeriod, key: string) {
+  if (!isCustom(key)) return;
+  await closeOpenStints(op.incidentId, key, nowIso());
+  const org = { ...op.org };
+  delete org[key];
   await patch<OpPeriod>('opPeriods', op.id, { org });
 }
 
@@ -140,7 +150,7 @@ export async function recordHandover(op: OpPeriod, h: Omit<Handover, 'id' | 'inc
   });
   // Log on the 201 actions list so the briefing shows the change.
   await patch<OpPeriod>('opPeriods', op.id, {
-    actions: [...op.actions, { time, action: `${positionTitle(h.positionKey)}: ${h.outgoing || '(vacant)'} handed over to ${h.incoming}` }],
+    actions: [...op.actions, { time, action: `${positionTitle(h.positionKey, op.org)}: ${h.outgoing || '(vacant)'} handed over to ${h.incoming}` }],
   });
   return rec;
 }
