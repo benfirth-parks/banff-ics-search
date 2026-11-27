@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, live } from '../db/db';
 import { createIncident } from '../lib/ops';
 import { joinRemote, syncEnabled, syncNow } from '../lib/sync';
-import { loadExercise } from '../data/scenario';
+import { loadExercise, SCENARIOS } from '../data/scenario';
 import { fmt } from '../components/ui';
 
 export function Home() {
@@ -14,6 +14,7 @@ export function Home() {
   const [role, setRole] = useState<'command' | 'field'>('command');
   const [msg, setMsg] = useState('');
   const [form, setForm] = useState({ name: '', number: '', location: '', icName: '' });
+  const [scenario, setScenario] = useState('random');
   const go = (id: string) => nav(role === 'field' ? `/i/${id}/field` : `/i/${id}`);
 
   const join = async () => {
@@ -56,7 +57,15 @@ export function Home() {
           <label className="field"><span>Incident Commander</span><input value={form.icName} onChange={(e) => setForm({ ...form, icName: e.target.value })} /></label>
           <button className="primary" disabled={!form.name} onClick={async () => { const i = await createIncident(form); nav(`/i/${i.id}`); }}>Create incident</button>
           <hr />
-          <button onClick={async () => { const i = await loadExercise(); nav(`/i/${i.id}`); }}>Load tabletop exercise: lost hiker</button>
+          <label className="field"><span>Tabletop exercise (fictional, training only)</span>
+            <select value={scenario} onChange={(e) => setScenario(e.target.value)}>
+              <option value="random">Random scenario</option>
+              {SCENARIOS.map((s, i) => <option key={s.key} value={s.key}>{i + 1}. {s.title}</option>)}
+            </select></label>
+          <button onClick={async () => {
+            const key = scenario === 'random' ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.key : scenario;
+            const i = await loadExercise(key); nav(`/i/${i.id}`);
+          }}>Load tabletop exercise</button>
         </section>
       </div>
       {incidents.length > 0 && (

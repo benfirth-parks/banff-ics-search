@@ -1,6 +1,6 @@
 # Tabletop exercise: overdue hiker, Cory Pass (FICTIONAL)
 
-Load it from the home screen: **Load tabletop exercise: lost hiker**. Everything is made up.
+Load it from the home screen: pick **Overdue hiker, Cory Pass** in the tabletop list and press **Load tabletop exercise**. Everything is made up. The other nine scenarios in the list (biker, runner, scrambler, dementia, despondent, mountaineers, tour hiker, youth with intellectual disability, mental illness) load with the forms, teams, 204s, subject and search map filled in, but have no controller script.
 
 ## Roles (4 to 8 players)
 | Role | Uses |
