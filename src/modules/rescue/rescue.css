@@ -1,0 +1,10 @@
+.triage { display: inline-block; padding: 1px 8px; border-radius: 4px; font-weight: 700; font-size: 0.82rem; }
+.t-red { background: #c62828; color: #fff; } .t-yellow { background: #f9c623; color: #000; } .t-green { background: #2e7d32; color: #fff; }
+.t-black { background: #222; color: #fff; } .t-unknown { background: #bbb; color: #000; }
+.patient { border-left: 6px solid #bbb; }
+.patient.pt-red { border-left-color: #c62828; } .patient.pt-yellow { border-left-color: #f9c623; } .patient.pt-green { border-left-color: #2e7d32; } .patient.pt-black { border-left-color: #222; }
+.gonogo button.on.gng-go { background: #2e7d32; color: #fff; } .gonogo button.on.gng-hold { background: #f9c623; } .gonogo button.on.gng-no-go { background: #c62828; color: #fff; }
+.gonogo .field, .gonogo span input { max-width: 220px; }
+.rescue h4 { margin: 14px 0 6px; }
+.ro { padding: 6px 0; }
+@media print { .rescue section.card { break-inside: avoid-page; } }
