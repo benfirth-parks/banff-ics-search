@@ -6,6 +6,13 @@ import { createIncident } from '../lib/ops';
 import { joinRemote, syncEnabled, syncNow } from '../lib/sync';
 import { loadExercise, SCENARIOS } from '../data/scenario';
 import { fmt } from '../components/ui';
+import { RESCUE_SCENARIOS, loadRescueExercise } from '../modules/rescue/scenario';
+import type { IncidentType } from '../db/types';
+
+const INCIDENT_TYPES: { value: IncidentType; label: string }[] = [
+  { value: 'missing-person', label: 'Missing person search' },
+  { value: 'large-rescue', label: 'Large rescue mission' },
+];
 
 export function Home() {
   const nav = useNavigate();
@@ -13,7 +20,7 @@ export function Home() {
   const [code, setCode] = useState('');
   const [role, setRole] = useState<'command' | 'field'>('command');
   const [msg, setMsg] = useState('');
-  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '' });
+  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '', type: 'missing-person' as IncidentType });
   const [scenario, setScenario] = useState('random');
   const go = (id: string) => nav(role === 'field' ? `/i/${id}/field` : `/i/${id}`);
 
@@ -51,6 +58,10 @@ export function Home() {
         </section>
         <section className="card">
           <h2>Start a new incident</h2>
+          <label className="field"><span>Incident type</span>
+            <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as IncidentType })}>
+              {INCIDENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select></label>
           <label className="field"><span>Incident name</span><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Overdue hiker, Lake Agnes" /></label>
           <label className="field"><span>Incident number</span><input value={form.number} onChange={(e) => setForm({ ...form, number: e.target.value })} /></label>
           <label className="field"><span>Location</span><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></label>
@@ -60,10 +71,16 @@ export function Home() {
           <label className="field"><span>Tabletop exercise (fictional, training only)</span>
             <select value={scenario} onChange={(e) => setScenario(e.target.value)}>
               <option value="random">Random scenario</option>
-              {SCENARIOS.map((s, i) => <option key={s.key} value={s.key}>{i + 1}. {s.title}</option>)}
+              <optgroup label="Missing person search">
+                {SCENARIOS.map((s, i) => <option key={s.key} value={s.key}>{i + 1}. {s.title}</option>)}
+              </optgroup>
+              <optgroup label="Large rescue mission">
+                {RESCUE_SCENARIOS.map((s) => <option key={s.key} value={s.key}>{s.title}</option>)}
+              </optgroup>
             </select></label>
           <button onClick={async () => {
             const key = scenario === 'random' ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.key : scenario;
+            if (RESCUE_SCENARIOS.some((r) => r.key === key)) { const i = await loadRescueExercise(); return nav(`/i/${i.id}/rescue`); }
             const i = await loadExercise(key); nav(`/i/${i.id}`);
           }}>Load tabletop exercise</button>
         </section>

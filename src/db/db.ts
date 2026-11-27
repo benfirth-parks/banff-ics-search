@@ -4,6 +4,7 @@ import type {
   ResourceRow, SearchMapRec, PickList, StaffMember, RadioChannel, AircraftCompany, TableName, BaseRecord,
 } from './types';
 import type { Hospital } from './types';
+import type { Patient, RescueLogEntry } from '../modules/rescue/types';
 
 export interface Meta { key: string; value: string }
 
@@ -25,6 +26,8 @@ class IcsDb extends Dexie {
   hospitals!: Table<Hospital & { id: string }, string>;
   aircraft!: Table<AircraftCompany, string>;
   meta!: Table<Meta, string>;
+  patients!: Table<Patient, string>;
+  rescueLog!: Table<RescueLogEntry, string>;
 
   constructor() {
     super('banff-ics-search');
@@ -48,6 +51,8 @@ class IcsDb extends Dexie {
       meta: 'key',
     });
     this.version(2).stores({ searchMaps: synced + ', opPeriodId' });
+    // Large rescue module. A high version number so other modules can add 3, 4... without clashing.
+    this.version(30).stores({ patients: synced, rescueLog: synced + ', opPeriodId' });
   }
 }
 

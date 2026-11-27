@@ -3,6 +3,7 @@ import { useCtx } from './IncidentLayout';
 import { useTable } from '../lib/hooks';
 import { fmt, fmtTime } from '../components/ui';
 import { positionTitle } from '../data/positions';
+import { RescueOverviewCard } from '../modules/rescue/OverviewCard';
 
 export function Overview() {
   const { incident, op } = useCtx();
@@ -22,6 +23,7 @@ export function Overview() {
         <div className="stat"><b>{count('in-field')}/{asg.length}</b><span>Assignments in field</span></div>
         <div className="stat"><b>{clues.length}</b><span>Clues</span></div>
       </div>
+      {incident.type === 'large-rescue' && <RescueOverviewCard />}
       <div className="cols2">
         <section className="card">
           <h3>Subject</h3>

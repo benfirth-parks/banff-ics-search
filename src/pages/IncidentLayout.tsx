@@ -34,6 +34,7 @@ export function IncidentLayout() {
       </header>
       <nav className="tabs no-print">
         <NavLink end to="">Overview</NavLink>
+        {incident.type === 'large-rescue' && <NavLink to="rescue">Rescue</NavLink>}
         <NavLink to="forms">ICS forms</NavLink>
         <NavLink to="periods">Op periods &amp; handovers</NavLink>
         <NavLink to="teams">Teams &amp; assignments</NavLink>
