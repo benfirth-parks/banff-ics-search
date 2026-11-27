@@ -21,6 +21,7 @@ export function IncidentLayout() {
   const incident = useIncident(incidentId);
   const { op, update } = useOp(incident);
   useIncidentSync(incident);
+  const avc = incident?.type === 'avalanche-control';
   if (!incident || !op) return <div className="pad">Loading… <Link to="/">Home</Link></div>;
   return (
     <div className="layout">
@@ -34,13 +35,14 @@ export function IncidentLayout() {
       </header>
       <nav className="tabs no-print">
         <NavLink end to="">Overview</NavLink>
-        {incident.type === 'avalanche' && <NavLink to="avalanche">Avalanche</NavLink>}
+        {incident.type === 'avalanche' && <NavLink to="avalanche">Avalanche rescue</NavLink>}
         <NavLink to="forms">ICS forms</NavLink>
         <NavLink to="periods">Op periods &amp; handovers</NavLink>
         <NavLink to="teams">Teams &amp; assignments</NavLink>
-        <NavLink to="map">Search map</NavLink>
-        <NavLink to="clues">Clue log</NavLink>
-        <NavLink to="subject">Subject</NavLink>
+        {avc && <NavLink to="avcontrol">Avalanche control</NavLink>}
+        {!avc && <NavLink to="map">Search map</NavLink>}
+        {!avc && <NavLink to="clues">Clue log</NavLink>}
+        {!avc && incident.type !== 'avalanche' && <NavLink to="subject">Subject</NavLink>}
         <NavLink to="reference">Reference</NavLink>
         <NavLink to="field">Field view</NavLink>
       </nav>

@@ -11,6 +11,7 @@ import { syncEnabled } from '../lib/sync';
 import { ClueForm } from '../components/ClueForm';
 import { DebriefForm } from '../components/DebriefForm';
 import { AvyFieldPanel } from '../avalanche/AvyFieldPanel';
+import { AvControlFieldPanel } from '../modules/avcontrol/AvControlSummary';
 
 const read = (k: string) => { try { return localStorage.getItem(k) ?? ''; } catch { return ''; } };
 const write = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
@@ -35,6 +36,7 @@ export function FieldPage() {
 
   if (!incident || !op) return <div className="pad">Loading… If this is your first time, join while online. <Link to="/">Home</Link></div>;
   const team = teams.find((t) => t.id === teamId);
+  const avc = incident.type === 'avalanche-control';
   const a = assignments.find((x) => x.teamId === teamId && x.status !== 'complete') ?? assignments.find((x) => x.teamId === teamId);
   const myCheckIns = checkIns.filter((c) => c.teamId === teamId).sort((x, y) => y.time.localeCompare(x.time)).slice(0, 5);
 
@@ -89,9 +91,10 @@ export function FieldPage() {
               ))}</div>
               <ul className="feed">{myCheckIns.map((c) => <li key={c.id}><b>{fmtTime(c.time)}</b> {c.status} {c.message && `· ${c.message}`} <span className="muted">{latLon(c.lat, c.lon)}</span>{c.dirty && syncEnabled ? ' ⏳' : ''}</li>)}</ul>
             </section>
+            {avc && <AvControlFieldPanel incidentId={incident.id} opPeriodId={op.id} teamName={team.name} />}
             <div className="big-buttons">
-              <button onClick={() => setPanel(panel === 'clue' ? '' : 'clue')}>🔎 Log a clue</button>
-              <button onClick={() => setPanel(panel === 'subject' ? '' : 'subject')}>👤 Subject</button>
+              {!avc && <button onClick={() => setPanel(panel === 'clue' ? '' : 'clue')}>🔎 Log a clue</button>}
+              {!avc && <button onClick={() => setPanel(panel === 'subject' ? '' : 'subject')}>👤 Subject</button>}
               {a && <button onClick={() => setPanel(panel === 'debrief' ? '' : 'debrief')}>📝 Debrief</button>}
             </div>
             {panel === 'clue' && <section className="card"><ClueForm incidentId={incident.id} teamId={team.id} assignmentId={a?.id} foundBy={me || team.name} onDone={() => setPanel('')} /></section>}

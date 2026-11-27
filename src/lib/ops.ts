@@ -1,6 +1,6 @@
 // Incident, operational period and handover logic.
 import { db, uid, nowIso, save, patch, live } from '../db/db';
-import type { Incident, OpPeriod, Team, Assignment, Handover, PositionLog, OrgSlot, CommsRow, Subject } from '../db/types';
+import type { IncidentType, Incident, OpPeriod, Team, Assignment, Handover, PositionLog, OrgSlot, CommsRow, Subject } from '../db/types';
 import { positionTitle, isCustom } from '../data/positions';
 
 export function makeCode() {
@@ -21,7 +21,7 @@ export function emptyOpPeriod(incidentId: string, number: number, start: string)
   };
 }
 
-export async function createIncident(input: { name: string; number: string; location: string; icName: string; exercise?: boolean; type?: Incident['type'] }) {
+export async function createIncident(input: { name: string; number: string; location: string; icName: string; exercise?: boolean; type?: IncidentType }) {
   const id = uid();
   const start = nowIso();
   const op = emptyOpPeriod(id, 1, start);

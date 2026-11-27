@@ -11,7 +11,7 @@ export interface BaseRecord {
 
 /** Incident types. v1 only supports missing-person, but the field exists so
  * other types (avalanche, technical rescue, wildfire support) can be added. */
-export type IncidentType = 'missing-person' | 'avalanche';
+export type IncidentType = 'missing-person' | 'avalanche-control' | 'avalanche';
 
 export interface Incident extends BaseRecord {
   name: string;
@@ -243,11 +243,13 @@ export interface ResourceRow extends BaseRecord {
 export type TableName =
   | 'incidents' | 'opPeriods' | 'teams' | 'assignments' | 'checkIns' | 'clues'
   | 'subjects' | 'positionLog' | 'handovers' | 'resources' | 'searchMaps'
+  | 'avControl'
   | 'avySites' | 'avyParties' | 'avyAreas';
 
 export const SYNC_TABLES: TableName[] = [
   'incidents', 'opPeriods', 'teams', 'assignments', 'checkIns', 'clues',
   'subjects', 'positionLog', 'handovers', 'resources', 'searchMaps',
+  'avControl',
   'avySites', 'avyParties', 'avyAreas',
 ];
 

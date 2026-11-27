@@ -4,6 +4,7 @@ import { useTable } from '../lib/hooks';
 import { fmt, fmtTime } from '../components/ui';
 import { positionTitle } from '../data/positions';
 import { AvyOverviewCard } from '../avalanche/AvyOverviewCard';
+import { AvControlSummary } from '../modules/avcontrol/AvControlSummary';
 
 export function Overview() {
   const { incident, op } = useCtx();
@@ -21,11 +22,11 @@ export function Overview() {
         <div className="stat"><b>{op.number}</b><span>Op period · ends {fmt(op.end)}{ends < 2 * 3600_000 && ends > 0 ? ' (soon)' : ''}</span></div>
         <div className="stat"><b>{teams.length}</b><span>Teams</span></div>
         <div className="stat"><b>{count('in-field')}/{asg.length}</b><span>Assignments in field</span></div>
-        <div className="stat"><b>{clues.length}</b><span>Clues</span></div>
+        {incident.type !== 'avalanche-control' && <div className="stat"><b>{clues.length}</b><span>Clues</span></div>}
       </div>
       <div className="cols2">
         <section className="card">
-          {incident.type === 'avalanche' ? <AvyOverviewCard incidentId={incident.id} /> : <>
+          {incident.type === 'avalanche' ? <AvyOverviewCard incidentId={incident.id} /> : incident.type === 'avalanche-control' ? <AvControlSummary incidentId={incident.id} opPeriodId={op.id} /> : <>
           <h3>Subject</h3>
           {subject?.name ? <p><b>{subject.name}</b>, {subject.age} · Last seen {subject.lastSeenTime} at {subject.lastSeenLocation}</p> : <p className="muted">No subject profile yet.</p>}
           <Link to="subject">Open subject profile</Link>

@@ -5,8 +5,9 @@ import { db, live } from '../db/db';
 import { createIncident } from '../lib/ops';
 import { joinRemote, syncEnabled, syncNow } from '../lib/sync';
 import { loadExercise, SCENARIOS } from '../data/scenario';
-import type { Incident } from '../db/types';
 import { fmt } from '../components/ui';
+import type { IncidentType } from '../db/types';
+import { AVC_SCENARIO, loadAvControlExercise } from '../modules/avcontrol/scenario';
 import { AVY_SCENARIOS, loadAvalancheExercise } from '../avalanche/scenario';
 
 export function Home() {
@@ -15,7 +16,7 @@ export function Home() {
   const [code, setCode] = useState('');
   const [role, setRole] = useState<'command' | 'field'>('command');
   const [msg, setMsg] = useState('');
-  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '', type: 'missing-person' as Incident['type'] });
+  const [form, setForm] = useState({ name: '', number: '', location: '', icName: '', type: 'missing-person' as IncidentType });
   const [scenario, setScenario] = useState('random');
   const go = (id: string) => nav(role === 'field' ? `/i/${id}/field` : `/i/${id}`);
 
@@ -54,8 +55,9 @@ export function Home() {
         <section className="card">
           <h2>Start a new incident</h2>
           <label className="field"><span>Incident type</span>
-            <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as Incident['type'] })}>
+            <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as IncidentType })}>
               <option value="missing-person">Missing person search</option>
+              <option value="avalanche-control">Avalanche control</option>
               <option value="avalanche">Large avalanche (multiple burials)</option>
             </select></label>
           <label className="field"><span>Incident name</span><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Overdue hiker, Lake Agnes" /></label>
@@ -70,6 +72,9 @@ export function Home() {
               <optgroup label="Missing person searches">
                 {SCENARIOS.map((s, i) => <option key={s.key} value={s.key}>{i + 1}. {s.title}</option>)}
               </optgroup>
+              <optgroup label="Avalanche control">
+                <option value={AVC_SCENARIO.key}>{AVC_SCENARIO.title}</option>
+              </optgroup>
               <optgroup label="Large avalanche">
                 {AVY_SCENARIOS.map((s) => <option key={s.key} value={s.key}>{s.title}</option>)}
               </optgroup>
@@ -77,7 +82,7 @@ export function Home() {
           <button onClick={async () => {
             const key = scenario === 'random' ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.key : scenario;
             if (AVY_SCENARIOS.some((s) => s.key === key)) { const i = await loadAvalancheExercise(); return nav(`/i/${i.id}/avalanche`); }
-            const i = await loadExercise(key); nav(`/i/${i.id}`);
+            const i = key === AVC_SCENARIO.key ? await loadAvControlExercise() : await loadExercise(key); nav(`/i/${i.id}`);
           }}>Load tabletop exercise</button>
         </section>
       </div>
