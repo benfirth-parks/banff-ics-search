@@ -1,0 +1,17 @@
+/* Large avalanche module */
+.avy-stats .stat-bad { background: #fde8e6; border-color: #e7a59f; } .avy-stats .stat-bad b { color: var(--danger); }
+.avy-stats .stat-warn { background: var(--warn); } .avy-stats .stat-ok b { color: var(--ok); }
+.avy-stats .cap { text-transform: capitalize; }
+.phase { font-size: 0.8rem; font-weight: 700; padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.ph-ok { background: #e3f2e5; color: #1f5f25; } .ph-warn { background: #fff0c2; color: #6b4c00; } .ph-bad { background: #fde8e6; color: var(--danger); }
+.triage { font-size: 0.8rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.t-red { background: #c62828; color: #fff; } .t-yellow { background: #f9d64a; color: #000; } .t-green { background: #2e7d32; color: #fff; } .t-black { background: #111; color: #fff; }
+tr.tri-row.t-red td:first-child { border-left: 6px solid #c62828; } tr.tri-row.t-yellow td:first-child { border-left: 6px solid #f9d64a; }
+tr.tri-row.t-green td:first-child { border-left: 6px solid #2e7d32; } tr.tri-row.t-black td:first-child { border-left: 6px solid #111; }
+tr.tri-row td { background: #fff; color: var(--ink); }
+.party.party-missing { border-left: 6px solid var(--danger); }
+.party-head .grow { flex: 1; min-width: 160px; } .party-head select { width: auto; }
+.party-label { font-size: 1.3rem; min-width: 2.2em; }
+.quick { margin: 6px 0 10px; }
+.avy-check li { padding: 4px 0; border-bottom: 1px dotted var(--line); }
+.avy-field .big-buttons button { font-size: 0.9rem; }

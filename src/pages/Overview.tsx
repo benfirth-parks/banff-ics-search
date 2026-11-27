@@ -4,6 +4,7 @@ import { useTable } from '../lib/hooks';
 import { fmt, fmtTime } from '../components/ui';
 import { positionTitle } from '../data/positions';
 import { RescueOverviewCard } from '../modules/rescue/OverviewCard';
+import { AvyOverviewCard } from '../avalanche/AvyOverviewCard';
 import { AvControlSummary } from '../modules/avcontrol/AvControlSummary';
 
 export function Overview() {
@@ -27,7 +28,7 @@ export function Overview() {
       {incident.type === 'large-rescue' && <RescueOverviewCard />}
       <div className="cols2">
         <section className="card">
-          {incident.type === 'avalanche-control' ? <AvControlSummary incidentId={incident.id} opPeriodId={op.id} /> : <>
+          {incident.type === 'avalanche' ? <AvyOverviewCard incidentId={incident.id} /> : incident.type === 'avalanche-control' ? <AvControlSummary incidentId={incident.id} opPeriodId={op.id} /> : <>
           <h3>Subject</h3>
           {subject?.name ? <p><b>{subject.name}</b>, {subject.age} · Last seen {subject.lastSeenTime} at {subject.lastSeenLocation}</p> : <p className="muted">No subject profile yet.</p>}
           <Link to="subject">Open subject profile</Link>

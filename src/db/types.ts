@@ -11,7 +11,7 @@ export interface BaseRecord {
 
 /** Incident types. v1 only supports missing-person, but the field exists so
  * other types (avalanche, technical rescue, wildfire support) can be added. */
-export type IncidentType = 'missing-person' | 'avalanche-control' | 'large-rescue';
+export type IncidentType = 'missing-person' | 'avalanche-control' | 'large-rescue' | 'avalanche';
 
 export interface Incident extends BaseRecord {
   name: string;
@@ -248,13 +248,15 @@ export type TableName =
   | 'incidents' | 'opPeriods' | 'teams' | 'assignments' | 'checkIns' | 'clues'
   | 'subjects' | 'positionLog' | 'handovers' | 'resources' | 'searchMaps'
   | 'avControl'
-  | 'patients' | 'rescueLog';
+  | 'patients' | 'rescueLog'
+  | 'avySites' | 'avyParties' | 'avyAreas';
 
 export const SYNC_TABLES: TableName[] = [
   'incidents', 'opPeriods', 'teams', 'assignments', 'checkIns', 'clues',
   'subjects', 'positionLog', 'handovers', 'resources', 'searchMaps',
   'avControl',
   'patients', 'rescueLog',
+  'avySites', 'avyParties', 'avyAreas',
 ];
 
 // Local-only reference data (editable on each device; seeded with samples).

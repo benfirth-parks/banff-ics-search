@@ -9,6 +9,7 @@ import { fmt } from '../components/ui';
 import type { IncidentType } from '../db/types';
 import { AVC_SCENARIO, loadAvControlExercise } from '../modules/avcontrol/scenario';
 import { RESCUE_SCENARIOS, loadRescueExercise } from '../modules/rescue/scenario';
+import { AVY_SCENARIOS, loadAvalancheExercise } from '../avalanche/scenario';
 
 export function Home() {
   const nav = useNavigate();
@@ -59,6 +60,7 @@ export function Home() {
               <option value="missing-person">Missing person search</option>
               <option value="avalanche-control">Avalanche control</option>
               <option value="large-rescue">Large rescue mission</option>
+              <option value="avalanche">Large avalanche (multiple burials)</option>
             </select></label>
           <label className="field"><span>Incident name</span><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Overdue hiker, Lake Agnes" /></label>
           <label className="field"><span>Incident number</span><input value={form.number} onChange={(e) => setForm({ ...form, number: e.target.value })} /></label>
@@ -78,10 +80,14 @@ export function Home() {
               <optgroup label="Large rescue mission">
                 {RESCUE_SCENARIOS.map((s) => <option key={s.key} value={s.key}>{s.title}</option>)}
               </optgroup>
+              <optgroup label="Large avalanche">
+                {AVY_SCENARIOS.map((s) => <option key={s.key} value={s.key}>{s.title}</option>)}
+              </optgroup>
             </select></label>
           <button onClick={async () => {
             const key = scenario === 'random' ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.key : scenario;
             if (RESCUE_SCENARIOS.some((r) => r.key === key)) { const i = await loadRescueExercise(); return nav(`/i/${i.id}/rescue`); }
+            if (AVY_SCENARIOS.some((s) => s.key === key)) { const i = await loadAvalancheExercise(); return nav(`/i/${i.id}/avalanche`); }
             const i = key === AVC_SCENARIO.key ? await loadAvControlExercise() : await loadExercise(key); nav(`/i/${i.id}`);
           }}>Load tabletop exercise</button>
         </section>

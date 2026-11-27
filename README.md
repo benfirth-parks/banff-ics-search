@@ -89,3 +89,7 @@ npm run build    # type-check + production build in dist/
 Stack: Vite, React, TypeScript, Dexie (IndexedDB), vite-plugin-pwa, Supabase.
 Incident types are modelled (`Incident.type`) so non-missing-person incidents
 can be added later; the app can be wrapped natively (e.g. Capacitor) later.
+
+## Large avalanche module
+
+Incidents created with type "Large avalanche" get an **Avalanche** tab (`src/avalanche/`): status board with time since the avalanche and live burial timers (survival-curve phases), involved parties (status, last-seen point, transceiver, located/extricated times, depth, airway), debris search areas (method, team, coverage), patients and triage (red/yellow/green/black, transport, destination), site and rescuer safety (danger ratings, overhead hazard, avalanche guard, alarm signal, escape routes, rescuers-on-debris count) and a rescue-phase checklist. Field phones get a hazard banner, their debris area, one-tap Located/Extricated and on/off debris. Data lives in the synced tables `avySites`, `avyParties`, `avyAreas`. Tabletop: "Large avalanche, multiple burials, Bow Summit area" in the exercise picker (fictional).

@@ -36,13 +36,14 @@ export function IncidentLayout() {
       <nav className="tabs no-print">
         <NavLink end to="">Overview</NavLink>
         {incident.type === 'large-rescue' && <NavLink to="rescue">Rescue</NavLink>}
+        {incident.type === 'avalanche' && <NavLink to="avalanche">Avalanche rescue</NavLink>}
         <NavLink to="forms">ICS forms</NavLink>
         <NavLink to="periods">Op periods &amp; handovers</NavLink>
         <NavLink to="teams">Teams &amp; assignments</NavLink>
         {avc && <NavLink to="avcontrol">Avalanche control</NavLink>}
         {!avc && <NavLink to="map">Search map</NavLink>}
         {!avc && <NavLink to="clues">Clue log</NavLink>}
-        {!avc && <NavLink to="subject">Subject</NavLink>}
+        {!avc && incident.type !== 'avalanche' && <NavLink to="subject">Subject</NavLink>}
         <NavLink to="reference">Reference</NavLink>
         <NavLink to="field">Field view</NavLink>
       </nav>

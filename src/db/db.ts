@@ -5,6 +5,7 @@ import type {
 } from './types';
 import type { Hospital } from './types';
 import type { Patient, RescueLogEntry } from '../modules/rescue/types';
+import type { AvySite, AvyParty, AvyArea } from '../avalanche/types';
 import type { AvControlRec } from '../modules/avcontrol/model';
 
 export interface Meta { key: string; value: string }
@@ -30,6 +31,9 @@ class IcsDb extends Dexie {
   meta!: Table<Meta, string>;
   patients!: Table<Patient, string>;
   rescueLog!: Table<RescueLogEntry, string>;
+  avySites!: Table<AvySite, string>;
+  avyParties!: Table<AvyParty, string>;
+  avyAreas!: Table<AvyArea, string>;
 
   constructor() {
     super('banff-ics-search');
@@ -57,6 +61,8 @@ class IcsDb extends Dexie {
     this.version(3).stores({ avControl: synced + ', opPeriodId' });
     // Large rescue module.
     this.version(4).stores({ patients: synced, rescueLog: synced + ', opPeriodId' });
+    // Large avalanche module (version 4 is the large rescue module).
+    this.version(5).stores({ avySites: synced, avyParties: synced, avyAreas: synced });
   }
 }
 
