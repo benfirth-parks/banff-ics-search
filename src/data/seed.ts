@@ -1,5 +1,7 @@
-// SAMPLE reference data. All names, call signs, phone numbers and frequencies
-// are invented for training. Verify real contacts before any live use.
+// Reference data. The staff list is the real Banff VS team (see STAFF below);
+// radio channels, hospitals and aircraft are SAMPLE data invented for training.
+// Verify real contacts before any live use.
+import type { StaffMember } from '../db/types';
 import { db } from '../db/db';
 
 export const DEFAULT_PICKLISTS: Record<string, string[]> = {
@@ -29,22 +31,42 @@ export const DEFAULT_PICKLISTS: Record<string, string[]> = {
   checkInStatus: ['On assignment, all OK', 'Arrived at segment', 'Departing segment', 'Clue found', 'Need assistance', 'Returning to base'],
 };
 
+/**
+ * Banff Visitor Safety staff (2027 VS schedule) and the avalanche callout list
+ * ("Avy callout list 2026-2027", Staff & Codes tab), the same sources the winter
+ * morning meeting app uses. Names and call signs only; no phone numbers.
+ * Surname-only entries are as the schedule lists them.
+ */
+const VS = 'Parks Canada Visitor Safety (Banff / LLYK)';
+export const STAFF: StaffMember[] = [
+  ['Lisa Paulson', ''], ['Aaron Beardmore', ''], ['Steve Holeczi', ''], ['Conrad Janzen', ''], ['Ian Jackson', ''],
+  ['Alex Lawson', ''], ['Ben Firth', ''], ['Adam Greenberg', ''], ['Haggarty', ''], ['Funston', ''],
+].map(([name, callSign], i) => ({ id: `vs${i + 1}`, name: name!, callSign: callSign!, agency: VS, quals: ['Visitor Safety'], phone: '' }))
+  .concat([
+    ['Mike Grande', 'B23', 'East'], ['Dan Rafla', '', 'East'], ['Spencer Bieri', '', 'East'], ['Ryan Burlingame', 'F2', 'East'],
+    ['Eric Dumochel Ricou', 'B99', 'East'], ['Sasha Yasinski', 'D17', 'West'],
+  ].map(([name, callSign, district], i) => ({
+    id: `co${i + 1}`, name: name!, callSign: callSign!, agency: `Parks Canada, ${district} district`, quals: ['Avalanche callout list'], phone: '',
+  })));
+const STAFF_VERSION = '2';
+const SAMPLE_STAFF_IDS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'];
+
+/** Swap the old made-up staff list for the VS team on devices seeded before it changed. Staff added by hand are kept. */
+async function updateStaff() {
+  if ((await db.meta.get('staffVersion'))?.value === STAFF_VERSION) return;
+  await db.transaction('rw', [db.staff, db.meta], async () => {
+    await db.staff.bulkDelete(SAMPLE_STAFF_IDS);
+    await db.staff.bulkPut(STAFF);
+    await db.meta.put({ key: 'staffVersion', value: STAFF_VERSION });
+  });
+}
+
 export async function seedReferenceData() {
-  if ((await db.meta.get('seeded'))?.value === '1') return;
+  if ((await db.meta.get('seeded'))?.value === '1') return updateStaff();
   await db.transaction('rw', [db.pickLists, db.staff, db.channels, db.hospitals, db.aircraft, db.meta], async () => {
     for (const [id, items] of Object.entries(DEFAULT_PICKLISTS)) await db.pickLists.put({ id, items });
-    await db.staff.bulkPut([
-      { id: 's1', name: 'Avery Lindqvist', callSign: 'Rescue 1', agency: 'Parks Canada VSPC', quals: ['ICS 300', 'Heli sling', 'ACMG'], phone: '403-555-0101' },
-      { id: 's2', name: 'Jordan Okafor', callSign: 'Rescue 2', agency: 'Parks Canada VSPC', quals: ['ICS 200', 'Search Manager', 'EMR'], phone: '403-555-0102' },
-      { id: 's3', name: 'Morgan Tremblay', callSign: 'Rescue 3', agency: 'Parks Canada VSPC', quals: ['ICS 300', 'Swiftwater', 'Avalanche L2'], phone: '403-555-0103' },
-      { id: 's4', name: 'Riley Nakamura', callSign: 'Warden 7', agency: 'Parks Canada LE', quals: ['ICS 200', 'Investigation'], phone: '403-555-0104' },
-      { id: 's5', name: 'Casey Beaulieu', callSign: 'Dispatch', agency: 'Banff Dispatch', quals: ['ICS 100', 'Radio'], phone: '403-555-0105' },
-      { id: 's6', name: 'Sam Whitehorse', callSign: 'Rescue 6', agency: 'Parks Canada VSPC', quals: ['ICS 200', 'Dog handler'], phone: '403-555-0106' },
-      { id: 's7', name: 'Taylor Brennan', callSign: 'Bow SAR 1', agency: 'Bow Valley SAR (volunteer)', quals: ['GSAR Team Leader', 'Standard First Aid'], phone: '403-555-0107' },
-      { id: 's8', name: 'Drew Kowalski', callSign: 'Bow SAR 2', agency: 'Bow Valley SAR (volunteer)', quals: ['GSAR Searcher', 'Wilderness First Responder'], phone: '403-555-0108' },
-      { id: 's9', name: 'Quinn Delacroix', callSign: 'Medic 1', agency: 'Alberta EMS', quals: ['Paramedic (ACP)'], phone: '403-555-0109' },
-      { id: 's10', name: 'Harper Singh', callSign: 'Rescue 10', agency: 'Parks Canada VSPC', quals: ['ICS 300', 'Planning Section'], phone: '403-555-0110' },
-    ]);
+    await db.staff.bulkPut(STAFF);
+    await db.meta.put({ key: 'staffVersion', value: STAFF_VERSION });
     await db.channels.bulkPut([
       { id: 'c1', channel: '1', name: 'PARKS COMMAND', func: 'Command', rxFreq: '166.0000', txFreq: '166.0000', tone: '100.0', mode: 'A' },
       { id: 'c2', channel: '2', name: 'SAR TAC 1', func: 'Tactical', rxFreq: '166.2500', txFreq: '166.2500', tone: '100.0', mode: 'A' },

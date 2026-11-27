@@ -23,7 +23,8 @@ handovers and transfer of command, plus simple field tools for team phones.
 - **Search basics**: subject profile, team status board with overdue
   check-in warning, clue log (links to CalTopo), debriefs per assignment.
 - **Templates and pick-lists**: standard objectives, safety messages, team
-  types, check-in statuses; sample staff list, radio channels, hospitals and
+  types, check-in statuses; the Banff Visitor Safety staff list (from the VS schedule and avalanche callout
+  list, names and call signs only), sample radio channels, hospitals and
   helicopter companies (all fictional contacts). Editable under Reference.
 - **Tabletop exercises**: pick one of 10 fictional scenarios (or Random) and press "Load tabletop exercise" on the home screen, with the
   controller script in [docs/tabletop-scenario.md](docs/tabletop-scenario.md).
